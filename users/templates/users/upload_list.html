@@ -1,0 +1,12 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+<h1>Upload market</h1>
+
+<form action="" method="POST" enctype="multipart/form-data" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary" >Upload Market File</button>
+</form>
+
+{% endblock %}

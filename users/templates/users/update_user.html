@@ -1,0 +1,13 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+
+<h1>Update User page</h1>
+<form action="{% url 'update_user' user.id %}" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+<button type="submit">Update</button>
+</form>
+
+{% endblock %}

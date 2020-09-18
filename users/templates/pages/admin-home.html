@@ -1,0 +1,97 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+
+    <div class="row">
+        <div class="col">
+            <div class="card card-body">
+                <h1>Upload A Market data File</h1>
+                
+                <form action="{% url 'admin_home' %}" method="POST" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                   <p class="abaab"> {{ form.as_p }} </p>
+                    <div class="abform">
+                        <button type="submit" class="btn btn-primary" >Upload Market File</button>
+                    </div>
+
+
+                    <!-- Adding Messages -->
+        
+                    {% for message in messages %}
+                    <h4>Info Message</h4>
+                    <p id="messages"> <b> {{message}} </b> </p>
+                    {% endfor %}	
+
+                </form>
+                
+              </form>
+            </div>
+        </div>	       
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card card-body">
+                <h1>Market List</h1>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>View</td>
+                            <td>Download</td>
+                            <td>Delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file in files %}
+                        <tr>
+                            <td> {{ file.name }} </td>
+                            <td>  
+                                <form action="{% url 'view_marketData' file.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-info" type="submit" > View CSV Data </button>
+                                </form>  
+                             </td>
+                            <td>  <a href=" {{ file.csv.url }} " class="btn btn-primary" target="_blank" >Download CSV</a>  </td>
+                            <td>  
+                                <form action="{% url 'delete_market' file.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="btn btn-danger" type="submit" > Delete CSV </button>
+                                </form>  
+                             </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+                
+                
+                
+              </form>
+            </div>
+        </div>	
+    </div>
+
+
+    <div class="row">
+	<div class="col">
+		<div class="card card-body">
+			
+            <h3>Users</h3>
+
+            <!-- <form action="#" >
+                {% csrf_token %}
+                <button class="btn btn-info" type="submit" > View Users </button>
+            </form>   -->
+
+            <a class="btn btn-info" href="{% url 'view_users' %}"> View Users </a>
+			
+        </form>
+    </div>
+
+</div>	
+</div>
+
+{% endblock %}

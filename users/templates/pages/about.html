@@ -1,0 +1,142 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+<style>
+  h1, h2, h3, h4, h5, h6,p{
+  color: white !important;
+}
+#showcase-inner::before {
+    background: black !important;
+}
+
+.btn-secondary {
+    background-color: #9f080b !important;
+    border-color: #9f080b !important;
+}
+
+.bg-dark {
+    background-color: #000 !important;
+}
+.text-success {
+    color: #9f080b !important;
+}
+</style>
+ <section id="about" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 style="text-align:center;">What we do</h1>
+          <p style="text-align:center;">The stock market enables the seamless exchange of buying and selling of company stocks. Therefore predicting the stock trends in a efficient manner can minimized the risk of loss and maximize the profit. </p>
+          <p style="text-align:center;">Therefore, we provide a web application that analyse the stock trends and based on those trends provide stock predictions in form of understandable graphs where you can see the predicted trends of the stock market that will show you how the market trend is about to go high or low and based on these results you can easily decide whether you should invest your money in the stocks or not.</p>
+
+        </div>
+      </div>
+    </div>
+  </section>
+<section id="showcase-inner" class="py-5 text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h1 class="display-4">About Stock Market</h1>
+          <p class="lead">A stock market is a similar designated market for trading various kinds of securities in a controlled, secure and managed the environment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <!--<section id="bc" class="mt-3">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#">
+              <i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="breadcrumb-item active"> About</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+-->
+  <section id="about" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2>How the Stock Market Works</h2>
+          <p class="lead">In a nutshell, stock markets provide a secure and regulated environment where market participants can transact in shares and other eligible financial instruments with confidence with zero- to low-operational risk. </p>
+          <img src="{% static '/img/wew.jpg' %}" alt="">
+          <p class="mt-4">To build a diversified portfolio without purchasing many individual stocks, you can invest in a type of mutual fund called an index fund or an exchange-traded fund. These funds aim to passively mirror the performance of an index by holding all of the stocks or investments in that index.</p>
+        </div>
+        <!--
+        <div class="col-md-4">
+          <div class="card">
+            <img class="card-img-top" src="assets/img/realtors/kyle.jpg" alt="Seller of the month">
+            <div class="card-body">
+              <h5 class="card-title">Seller Of The Month</h5>
+              <h6 class="text-secondary">Kyle Brown</h6>
+              <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis nesciunt amet, illo itaque similique repellat.
+                content.
+              </p>
+            </div>
+          </div>
+        </div>
+      -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="bg-dark text-white text-center">
+    <h2 class="display-4">We Work For You</h2>
+    <h4>We want to hear from you and encourage a lively discussion among our users!</h4>
+    <hr>
+    <a href="{% url 'mainHome' %}" class="btn btn-secondary text-white btn-lg">View Our Predictions</a>
+  </section>
+
+  <!-- Team -->
+  <section id="team" class="py-5">
+    <div class="container">
+      <h2 class="text-center">Our Team</h2>
+      <div class="row text-center">
+        <div class="col-md-4">
+          <img src="{% static '/img/arbi.jpg' %}" alt="" class="rounded-circle mb-3">
+          <h4>Abdul Rehman</h4>
+          <p class="text-success">
+            <i class="fas fa-award text-success mb-3"></i> Admin</p>
+          <hr>
+          <p>
+            <i class="fas fa-phone"></i> 0335-4286686</p>
+          <p>
+            <i class="fas fa-envelope-open"></i> abdulrehman51240@gmail.com</p>
+        </div>
+
+        <div class="col-md-4">
+          <img src="{% static 'img/ateeb.jpg' %}" alt="" class="rounded-circle mb-3">
+          <h4>Ateeb Asif</h4>
+
+          <p class="text-success">
+            <i class="fas fa-award text-success mb-3"></i> Admin</p>
+          <hr>
+          <p>
+            <i class="fas fa-phone"></i> 0303-9859637</p>
+          <p>
+            <i class="fas fa-envelope-open"></i> ateeb.asif902@gmail.com</p>
+        </div>
+
+        <div class="col-md-4">
+          <img src="{% static 'img/hamza.jpg' %}" alt="" class="rounded-circle mb-3">
+          <h4>Hamza Asghar</h4>
+
+          <p class="text-success">
+            <i class="fas fa-award text-success mb-3"></i> Admin</p>
+          <hr>
+          <p>
+            <i class="fas fa-phone"></i> 0303-6224119</p>
+          <p>
+            <i class="fas fa-envelope-open"></i> mianhamza008@gmail.com</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

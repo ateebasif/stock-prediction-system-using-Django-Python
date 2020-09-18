@@ -1,0 +1,285 @@
+{% extends 'users/main.html' %}
+
+{% block content %}
+
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<h1>Home</h1>
+
+<div class="row">
+	<div class="col-6">
+		<div class="card card-body">
+			
+			<button class="btn btn-primary" type="submit">Search</button>
+			
+		  </form>
+		</div>
+    </div>	
+    
+    <div class="col-6">
+		<div class="card card-body">
+            
+            
+			<button class="btn btn-primary" type="submit">Search</button>
+			
+		  </form>
+		</div>
+	</div>	
+</div>
+
+<br><br><br><br>
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+            <h1>Adding Filter</h1>
+            <form action="" method="GET">
+                {{ myFilter.form }}
+			    <button class="btn btn-primary" type="submit">Search</button>
+            </form>
+            
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Market Name</th>
+                        <th>Add</th>
+                    </tr>
+                </thead>                
+                {% for market in stockMarket %}
+                
+                <form action="{% url 'watchlist' request.user %}" method="POST">
+                <tr>
+                    
+                    <td><option name="market" >{{market.name}}</option></td>
+                    <td> 
+                       
+                            {% csrf_token %}
+                            <input type="submit" value="Add">
+                        </td>
+                    </tr>
+                </form>
+                    
+                {% endfor %}
+            </table>
+
+		</div>
+	</div>	
+</div>
+
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+            <h2 class="btn btn-primary" >Watchlist</h2>
+            
+        <table>
+
+            <tr>
+                <td>
+                    <form action="{% url 'watchlist' request.user %}" method="POST">
+                        {% csrf_token %}
+                        <select  name="market">
+                                <!-- <option disabled="true" selected >-- Select a marked --</option> -->
+                            {% for market in stockMarket %}
+                
+                                <option name="" id="">  {{market.name}} </option>
+                        
+                            {% endfor %}
+                            <input type="submit" value="Add">
+                        </select>
+                    </form>
+                </td>                
+            </tr>
+        </table>
+
+            <!-- Adding Messages -->
+        
+        {% for message in messages %}
+        <h4>Info Message</h4>
+        <p id="messages">{{message}}</p>
+        {% endfor %}	
+
+        
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Market Name</th>
+                    <th>Date</th>
+                    <th>Open</th>
+                    <th>Close</th>
+                    <th>High</th>
+                </tr>
+            </thead>
+            {% for list in watchlist  %}
+                {% for data in df %}
+            <tr>
+                <td> <b> {{list.market.name}} </b> </td>
+                <td>{{data.Date}}</td>
+                <td>{{data.Open}}</td>
+                <td>{{data.Close}}</td>
+                <td>{{data.Low}}</td>
+                <td> 
+                    <form action="{% url 'removeWatchlist' list.id %}" method="POST" > 
+                        {% csrf_token %} 
+                        <button class="btn btn-danger" type="submit"> Remove </button>
+                     </form> 
+                </td>
+            </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+                     
+
+            <hr>
+            
+            
+			<!-- <button class="btn btn-primary" type="submit">Search</button> -->
+			
+		  </form>
+		</div>
+	</div>	
+</div>
+
+
+<!-- Chart -->
+
+<canvas id="market_chart" width="700" height="150" ></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+<div id="myChart" ></div>
+
+<script>
+
+    // making chart data get call
+    let dataURL = `/market_chart/`
+
+    let state = {
+        'items': [],
+        'values': [],
+    }
+
+    $.ajax({
+        method: 'GET',
+        url:dataURL, 
+        success: function(response){
+            console.log('Response', response)
+
+            /*for (let i in response) {
+
+                let key = i.labels
+                let value = Object.values(response[i])[0]
+
+                state.items.push(key)
+                state.values.push(value)
+            }
+*/          for( let i = 754; i>0; i--){
+                state.items.push(response.labels[i])
+                state.values.push(response.data[i])
+
+            }
+            //state.items.push(response.labels)
+            //state.values.push(response.data)
+
+            console.log('State: ',state)
+            buildChart()
+
+        }
+    })
+
+  /*  function buildChart() {
+
+            let chartData = {
+                "type": "bar",
+                "scale-x": {
+                    "values": state.items
+                },
+                "series":[
+                    {
+                        "values": state.values
+                    }
+                ]
+        
+            }
+        
+            zingchart.render({
+                id: "myChart",
+                data: chartData
+            });
+
+    }  */
+
+    function buildChart() {
+        
+        var ctx = document.getElementById('market_chart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: state.items,
+        datasets: [{
+            label: 'Closing Price',
+            data: state.values,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 2,
+            fill: false
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        },
+        
+    }
+});
+
+    }
+    
+  </script>
+
+{% endblock %}
+
+
+<!-- 
+<script>
+
+    let chartData = {
+        "type": "bar",
+        "scale-x": {
+            "values": [
+              "ateeb",
+              "adeel",
+              "someone"
+            ]
+        }
+  
+    }
+  
+    zingchart.render({
+        id: "myChart",
+        data: chartData
+    });
+    
+  </script> -->
+
+

@@ -1,0 +1,80 @@
+<script>
+  
+
+    // making chart data get call
+    let dataURL = `/market_chart/`
+  
+    let state = {
+        'items': [],
+        'values': [],
+        'marketName': '',
+    }
+  
+    $.ajax({
+        method: 'GET',
+        url:dataURL, 
+        success: function(response){
+            console.log('Response', response)
+  
+            
+              for( let i = 754; i>0; i--){
+                state.items.push(response.labels[i])
+                state.values.push(response.data[i])
+  
+                }
+                state.marketName = response.name
+            
+  
+            console.log('State: ',state)
+            buildChart()
+  
+        }
+    })
+  
+    function buildChart() {
+        
+        var ctx = document.getElementById('market_chart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: state.items,
+                datasets: [{
+                    label: state.marketName,
+                    data: state.values,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                
+            }
+        });
+        
+        }
+    
+  
+  </script>
+  

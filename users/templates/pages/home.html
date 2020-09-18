@@ -1,0 +1,379 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+
+
+ <style>
+body{
+  background-color: #eee !important;
+}
+.col-sm-3.tab1 {
+    padding: 35px;
+    margin: 0 auto;
+    background-image: linear-gradient(-90deg, #2e50b1, #00ffc4);
+    margin-top: 20px;
+}
+.col-sm-3.tab2 {
+    padding: 35px;
+    margin: 0 auto;
+    background-image: linear-gradient(-90deg, #ff0303, #ff0081);
+    margin-top: 20px;
+}
+.col-sm-3.tab3 {
+    padding: 35px;
+    margin: 0 auto;
+    background-image: linear-gradient(-90deg, #f73900, #ffeb00);
+    margin-top: 20px;
+}
+.sidenav {
+    background-color: #23282d !important;
+    height: auto !important;
+    max-width: 20%;
+}
+select#market {
+    width: 100%;
+    border: 1px solid #eee;
+    padding: 6px;
+    border-radius: 5px;
+}
+.card.button td:first-child {
+    width: 85%;
+}
+.card.button {
+    margin: 10px 0px;
+}
+nav.navbar.navbar-expand-lg.navbar-dark.bg-primary.sticky-top {
+    background-image: linear-gradient(-90deg, #f75e04, #ff0000) !important;
+}
+section#top-bar {
+    display: none;
+}  
+nav#sidebar {
+    max-width: 100%;
+    padding: 0px !important;
+}
+.col-sm-9 {
+    flex: 0 0 80% !important;
+    max-width: 80% !important;
+}
+ul.list-unstyled.components.mb-5 li a {
+    color: #ffffff;
+}
+nav#sidebar .p-4.pt-5 {
+    padding: 40px 0px !important;
+}
+@media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+.ajaxProgress{
+  display: none;
+  /* text-align: center; */
+  margin-left: 38%;
+  padding: 20px;
+  width: 250px;
+}
+
+#currentBtn {
+
+background-image: linear-gradient(-90deg, #2e50b1, #00ffc4);
+}
+#prophetbtn {
+background-image: linear-gradient(-90deg, #ff0303, #ff0081);
+}
+#lstmbtn {
+background-image: linear-gradient(-90deg, #f73900, #ffeb00);
+}
+.btn.btn-info {
+background: #90080b;
+border: none !important;
+}
+
+</style>
+
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <h4>Stock Predictor</h4>
+       <nav id="sidebar" class="col-md-4">
+        <div class="p-4 pt-5">
+          <a href="#" class="img logo rounded-circle mb-5" style="background-image: url(images/logo.jpg);"></a>
+          <ul class="list-unstyled components mb-5">
+            <li class="active">
+              <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">Home</a>
+
+            <li>
+                <a href="{% url 'about' %}">About</a>
+            </li>
+            <li>
+              <a href="{% url 'contactUs' %}">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+        
+      </div>
+      <!-- The graph buttons part where three buttons are displayed to run three different algorithms -->
+      <div class="col-sm-9">
+        <div class="row">
+          <div class="col-sm-3 tab1">
+             <p>Arima Algorithm</p>
+               <button  id="currentBtn" class="btn btn-info"> Arima </button>
+          </div>
+          <div class="col-sm-3 tab2">
+            <p>FBProphet Algorithm</p>
+            <button id="prophetbtn" class="btn btn-info"> FBProphet </button>
+          </div>
+          <div class="col-sm-3 tab3">
+            <p>LSTM Algorithm</p>
+       
+            <button  id="lstmbtn" class="btn btn-info"> LSTM </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="card button">               
+               <table>  
+                    <tr>
+                        <td>
+                            <form onsubmit="return false;" id="form1" >
+                                {% csrf_token %}
+                                <select  id="market">
+                                        <!-- The market list that displays the currently available market or those markets for which we have the historical data -->
+                                    {% for market in stockMarket %}
+                        
+                                        <option id="marketName" id="">  {{market.name}} </option>
+                                
+                                    {% endfor %}                              
+                                </select>
+                            
+                        </td> 
+                        <td>
+                              <!-- <a href="{% url 'market_chart' %}" class="btn btn-info"> Current Graph </a> -->
+<!--                              <button onclick="currentChart()" id="currentBtn" class="btn btn-info"> current </button>-->
+                        </td>    
+                        <td> 
+                              <p class="btn btn-info" >Select a Company </p>
+                        </td>
+                          </form>           
+                    </tr>
+                </table>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+
+            <!-- The prediction graph sections....... right now the prediction graph image is displayed that is generated through pyplot -->
+
+            <!-- The chartjs graph part the canvas is used to display the chartjs graph -->
+<!--            <div class="card card-body">-->
+<!--        -->
+<!--              <h1>current graph</h1>-->
+<!--              <canvas id="market_chart" width="auto" height="auto" ></canvas>-->
+<!--                -->
+<!--        -->
+<!--            </div>-->
+      
+             
+              <!-- Loading Screen, the loading gif image that says please wait while the algo is being run -->
+              <div id="output">
+
+                <div class="ajaxProgress">
+                  <h3>Please Wait....</h3>
+                  <img src="{{ MEDIA_URL }}/static/img/ajax-loader3.gif" alt="loading">
+            
+                </div>
+                </div>
+          
+                  <!-- Prediction Graph Part where the graph is currently being displayed -->
+                  <img src="" id="graph">
+                
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- The Graph Part -->
+
+</section> 
+
+<script>
+
+$(document).ready( function() {
+
+algoUrl = ''; // the url variable so it can be changed according to the required algorithm call
+
+// Arima Algo URL Change BTN Function
+$("#currentBtn").click(function () {
+// alert("Arima working")
+
+
+algoUrl = "/arima/";
+console.log(algoUrl)
+
+currentChart()
+
+
+
+});
+
+// FB-Prophet Algo URL Change BTN Function
+$("#prophetbtn").click(function () {
+algoUrl = "/prophet/";
+console.log(algoUrl)
+
+currentChart()
+
+});
+
+// LSTM Algo URL Change BTN Function
+$("#lstmbtn").click(function () {
+algoUrl = "/lstm/";
+console.log(algoUrl)
+
+currentChart()
+
+});
+
+
+});
+
+  let state = {
+    'items': [],
+    'values': [],
+    'marketName': '',
+}
+
+
+  function currentChart() {
+
+  $("#graph").hide(); // graph is hiding after the second call
+
+  $('.ajaxProgress').show();
+
+  $.ajax({
+
+      type: "POST",
+      url: algoUrl,
+      dataType: "json",
+      async: true,
+      data: {
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        market: $('#market').val(),
+        marketName: $('#marketName').val()
+      },
+
+      success: function(json) {
+        // alert(json.data);
+        console.log(json.data);
+        $("#graph").show();
+        document.getElementById('graph').src=json.data;
+
+        $('#output').html(json.message);
+        $('.ajaxProgress').hide();
+        // Reseting the values if the button of show current graph is pressed again
+        state.items = [];
+        state.values = [];
+        state.marketName = '';
+
+
+        // for the chartjs getting the result in the json response and then pushing it in the array so it can be used in chartjs function
+        // finding the length of the data values so we can use a loop to display exactly the returned num of values
+<!--        let length= Object.keys(json.labels).length;-->
+
+<!--        console.log('Lenghttttt : ', length)-->
+
+<!--        for( let i = length; i>0; i&#45;&#45;){-->
+<!--          state.items.push(json.labels[i])-->
+<!--          state.values.push(json.data[i])-->
+
+<!--          }-->
+
+<!--          state.marketName = json.name-->
+<!--      -->
+
+<!--          console.log('State: ',state)-->
+<!--          buildChart()-->
+
+      }
+
+  });
+  
+  }
+
+  //  The graph function to plot the graph of the prediction result values using chartjs
+  function buildChart() {
+        
+    var ctx = document.getElementById('market_chart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: state.items,
+            datasets: [{
+                label: state.marketName,
+                data: state.values,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+      /*  options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            
+        } */
+    });
+
+    // Destroying the chart after it is rendered once so upon next call it does not display the older data
+    let currentBtn = document.getElementById("currentBtn");
+    currentBtn.addEventListener("click", function(){
+      myChart.destroy();
+    
+      });
+    
+    }
+
+  
+</script>
+     
+</section>  
+      
+{% endblock %}

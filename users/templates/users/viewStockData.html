@@ -1,0 +1,52 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+<h1>View Data Page</h1>
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+
+            <h2>Market Name  {{ market_name }}</h2>
+            
+        </div>
+    </div>
+</div>
+
+    <div class="row">
+	<div class="col">
+		<div class="card card-body">
+            
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Open</th>
+                        <th>Close</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                
+                {% for data in df %}
+                <tr>
+                    
+                    <td>{{data.Date}}</td>
+                    <td>{{data.Open}}</td>
+                    <td>{{data.Close}}</td>
+                    <td>{{ data.High }}</td>
+                    <td>{{data.Low}}</td>     
+                    <td>{{data.Volume}}</td>        
+                </tr>
+                {% endfor %}
+                
+            </table>
+          
+	
+		</div>
+	</div>	
+</div>
+
+{% endblock %}

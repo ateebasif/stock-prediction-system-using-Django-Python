@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+
+<h1>Market List</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Download</td>
+            <td>Delete</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for file in files %}
+        <tr>
+            <td> {{ file.name }} </td>
+            <td>  <a href=" {{ file.csv.url }} " class="btn btn-primary" target="_blank" >Download CSV</a>  </td>
+            <td>  
+                <form action="{% url 'delete_market' file.id %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-danger" type="submit" > Delete CSV </button>
+                </form>  
+             </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    
+</table>
+
+{% endblock %}
