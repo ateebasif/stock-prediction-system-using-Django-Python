@@ -1,5 +1,9 @@
 # stock-prediction-system-using-Django-Python
 ### Stock Prediction Web Application
+__Used Algorithms__
+* ARIMA
+* FB-Prophet
+* LSTM (Long Short Term Memory)
 
 # Getting Started
 * Download or Clone the Repository then,
